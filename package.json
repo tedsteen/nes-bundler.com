@@ -14,15 +14,15 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-netlify": "^4.4",
-		"@sveltejs/kit": "^2.0",
+		"@sveltejs/kit": "^2.15",
 		"@sveltejs/vite-plugin-svelte": "^5.0",
 		"autoprefixer": "^10.4",
 		"prettier": "^3.3",
-		"prettier-plugin-svelte": "^3.2",
-		"svelte": "^5.16",
-		"svelte-check": "^4.0",
+		"prettier-plugin-svelte": "^3.3",
+		"svelte": "^5.17",
+		"svelte-check": "^4.1",
 		"tailwindcss": "^3.4",
-		"typescript": "^5.0",
+		"typescript": "^5.7",
 		"vite": "^6.0"
 	}
 }
