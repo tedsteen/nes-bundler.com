@@ -13,7 +13,8 @@
 		"lint": "prettier --check ."
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-netlify": "^6.0.4",
+		"@sveltejs/adapter-cloudflare": "^7.2.9",
+		"wrangler": "^4.111.0",
 		"@sveltejs/kit": "^2.69.3",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
 		"@tailwindcss/vite": "^4.3.3",
