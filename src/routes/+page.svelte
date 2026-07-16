@@ -1,6 +1,5 @@
 <script>
-	/** @type {import('./$types').ActionData} */
-	export let form;
+	let { form } = /** @type {{ form: import('./$types').ActionData }} */ ($props());
 
 	/**
 	 * @param {DragEvent} e
@@ -10,9 +9,21 @@
 		e.stopPropagation();
 	}
 
-	/** @type {FileList | undefined } */
-	let files;
-	let dragHover = false;
+	let files = $state();
+	let dragHover = $state(false);
+
+	/**
+	 * @param {Event} e
+	 */
+	function fileChange(e) {
+		files = /** @type {HTMLInputElement} */ (e.target).files;
+	}
+
+	$effect(() => {
+		addEventListener('pageshow', (e) => {
+			if (e.persisted) files = undefined;
+		});
+	});
 
 	/**
 	 * @param {DragEvent} ev
@@ -23,9 +34,9 @@
 </script>
 
 <svelte:window
-	on:dragenter={preventAndStopPropagation}
-	on:dragover={preventAndStopPropagation}
-	on:drop={preventAndStopPropagation}
+	ondragenter={preventAndStopPropagation}
+	ondragover={preventAndStopPropagation}
+	ondrop={preventAndStopPropagation}
 />
 <svelte:head>
 	<title>NES Bundler</title>
@@ -59,19 +70,19 @@
 	<div class="flex items-start mb-5">
 		<label
 			id="file-area"
-			on:drop={drop}
+			ondrop={drop}
 			class:bg-gray-300={dragHover}
-			on:dragleave={(ev) => {
+			ondragleave={(ev) => {
 				dragHover = false;
 			}}
-			on:dragenter={(ev) => {
+			ondragenter={(ev) => {
 				dragHover = true;
 			}}
 			for="dropzone-file"
 			class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-300"
 		>
 			<div class="flex flex-col items-center justify-center pt-5 pb-6">
-				{#if files}
+				{#if files?.length}
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -123,7 +134,7 @@
 				{/if}
 			</div>
 			<input
-				bind:files
+				onchange={fileChange}
 				id="dropzone-file"
 				name="config_zip"
 				type="file"
