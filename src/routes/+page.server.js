@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { GITHUB_PAT } from '$env/static/private';
 import { fail, redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').Actions} */
@@ -46,7 +46,7 @@ export const actions = {
 				{
 					method: 'POST',
 					headers: {
-						Authorization: `Bearer ${env.GITHUB_PAT}`,
+						Authorization: `Bearer ${GITHUB_PAT}`,
 						Accept: 'application/vnd.github.v3+json',
 						'User-Agent': 'nes-bundler.com',
 						'X-GitHub-Api-Version': '2022-11-28'

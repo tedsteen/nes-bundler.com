@@ -8,6 +8,8 @@ npm install
 
 Copy `.env.example` to `.env` and add your `GITHUB_PAT`.
 
+The token is baked into the server bundle at build time (`$env/static/private`), so no Cloudflare Pages runtime secrets are needed.
+
 ## Dev
 
 ```bash
@@ -21,12 +23,8 @@ npm run build
 npx wrangler pages deploy .svelte-kit/cloudflare --branch=main
 ```
 
-## Secrets
+## Logs
 
 ```bash
-# Prompt for value
-npx wrangler pages secret put GITHUB_PAT
-
-# Or pipe it
-echo "ghp_xxx" | npx wrangler pages secret put GITHUB_PAT
+npx wrangler pages deployment tail --project-name nes-bundler
 ```

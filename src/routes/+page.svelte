@@ -9,8 +9,11 @@
 		e.stopPropagation();
 	}
 
+	import { enhance } from '$app/forms';
+
 	let files = $state();
 	let dragHover = $state(false);
+	let submitting = $state(false);
 
 	/**
 	 * @param {Event} e
@@ -55,7 +58,19 @@
 		href="https://github.com/tedsteen/nes-bundler">https://github.com/tedsteen/nes-bundler</a
 	>
 </p>
-<form method="POST" enctype="multipart/form-data" action="?/bundle" class="max-w-sm mx-auto">
+	<form
+		method="POST"
+		enctype="multipart/form-data"
+		action="?/bundle"
+		class="max-w-sm mx-auto"
+		use:enhance={() => {
+			submitting = true;
+			return async ({ update }) => {
+				submitting = false;
+				await update();
+			};
+		}}
+	>
 	<div class="mb-5">
 		<input
 			name="recipient_email"
@@ -153,9 +168,28 @@
 	{/if}
 	<button
 		type="submit"
-		class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-		>Bundle!</button
+		disabled={submitting}
+		class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center disabled:opacity-50 disabled:cursor-not-allowed"
 	>
+		{#if submitting}
+			<svg
+				class="inline w-4 h-4 mr-2 animate-spin"
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+			>
+				<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+				<path
+					class="opacity-75"
+					fill="currentColor"
+					d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+				/>
+			</svg>
+			Submitting...
+		{:else}
+			Bundle!
+		{/if}
+	</button>
 </form>
 
 <style>
