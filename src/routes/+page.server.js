@@ -1,4 +1,4 @@
-import { GITHUB_PAT } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { fail, redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').Actions} */
@@ -41,21 +41,29 @@ export const actions = {
 
 			const configuration_url = `https://filebin.net/${bin_id}/config.zip`;
 
-			await fetch('https://api.github.com/repos/tedsteen/nes-bundler/dispatches', {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${GITHUB_PAT}`,
-					Accept: 'application/vnd.github.v3+json',
-					'X-GitHub-Api-Version': '2022-11-28'
-				},
-				body: JSON.stringify({
-					event_type: 'bundle',
-					client_payload: {
-						configuration_url,
-						recipient_email
-					}
-				})
-			});
+			const dispatch_res = await fetch(
+				'https://api.github.com/repos/tedsteen/nes-bundler/dispatches',
+				{
+					method: 'POST',
+					headers: {
+						Authorization: `Bearer ${env.GITHUB_PAT}`,
+						Accept: 'application/vnd.github.v3+json',
+						'User-Agent': 'nes-bundler.com',
+						'X-GitHub-Api-Version': '2022-11-28'
+					},
+					body: JSON.stringify({
+						event_type: 'bundle',
+						client_payload: {
+							configuration_url,
+							recipient_email
+						}
+					})
+				}
+			);
+
+			if (!dispatch_res.ok) {
+				throw new Error(`GitHub dispatch returned ${dispatch_res.status}`);
+			}
 		} catch (error) {
 			console.error('failure', error);
 			return fail(400, {
